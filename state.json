@@ -1,14 +1,30 @@
 {
   "tasks_done": [
-    "NR-000: Initial project scaffolding"
+    "NR-000: Initial project scaffolding",
+    "NR-001: Implement habit baseline rule",
+    "NR-002: Create weekly ramp (+15%) calculation logic"
   ],
-  "prs": [],
+  "prs": [
+    {
+      "branch": "ft/NR-001-baseline-rule",
+      "commit_hash": "d7dc2b3",
+      "message": "ft: NR-001 implement habit baseline rule"
+    },
+    {
+      "branch": "ft/NR-002-weekly-ramp",
+      "url": "https://github.com/matheusbuniotto/neuro-ramp/pull/1",
+      "message": "ft: NR-002 implement weekly ramp calculation logic"
+    }
+  ],
   "commits": [
-    "NR-000: Initial project scaffolding with uv, Docker, and pytest"
+    "NR-000: Initial project scaffolding with uv, Docker, and pytest",
+    "NR-001: Implement habit baseline rule",
+    "NR-002: Implement weekly ramp (+15%) calculation logic"
   ],
   "attention": [
-    "Project initialized with Python 3.12 and uv.",
-    "Docker environment ready via Dockerfile and docker-compose.yml.",
-    "Tests configured and passing."
+    "Weekly ramp logic (+15%) implemented and tested.",
+    "Added `apply_next_week_load` for better state management.",
+    "Fixed baseline edge cases for extremely small targets.",
+    "PR #1 created and reviewed by sub-agent."
   ]
 }
