@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 from dataclasses import dataclass, field
 from enum import Enum, auto
+from datetime import time
 
 class ChangeType(Enum):
     RAMP = auto()
@@ -75,3 +76,23 @@ class HabitEngine:
         new_load, _ = self.calculate_next_week_load(habit, adherence_rate)
         habit.current_load = new_load
         habit.weeks_completed += 1
+
+    def get_completion_multiplier(self, completion_time: time) -> float:
+        """
+        Retorna o multiplicador de progresso baseado no horário de conclusão.
+        Pico de cortisol (06:00 - 08:00) garante 2.3x.
+        """
+        start_peak = time(6, 0)
+        end_peak = time(8, 0)
+        
+        if start_peak <= completion_time <= end_peak:
+            return 2.3
+        
+        return 1.0
+
+    def calculate_completion_score(self, habit: Habit, completion_time: time) -> float:
+        """
+        Calcula o score de conclusão baseado no load atual e no multiplicador de horário.
+        """
+        multiplier = self.get_completion_multiplier(completion_time)
+        return round(habit.current_load * multiplier, 2)
