@@ -13,10 +13,11 @@ def test_weekly_ramp_calculation_success():
     initial_load = habit.current_load # 2.0
     adherence_rate = 0.85 # 85% (> 80%)
     
-    new_load = engine.calculate_next_week_load(habit, adherence_rate)
+    new_load, change_type = engine.calculate_next_week_load(habit, adherence_rate)
     
     # 2.0 * 1.15 = 2.3
     assert new_load == pytest.approx(initial_load * 1.15)
+    assert change_type.name == "RAMP"
 
 def test_weekly_ramp_failure_low_adherence():
     """
@@ -28,10 +29,11 @@ def test_weekly_ramp_failure_low_adherence():
     initial_load = habit.current_load
     adherence_rate = 0.70 # 70% (<= 80%)
     
-    new_load = engine.calculate_next_week_load(habit, adherence_rate)
+    new_load, change_type = engine.calculate_next_week_load(habit, adherence_rate)
     
     # Deve manter o load atual ou até reduzir (mas por enquanto, manter)
     assert new_load == initial_load
+    assert change_type.name == "MAINTAIN"
 
 def test_weekly_ramp_does_not_exceed_target():
     """
@@ -42,6 +44,6 @@ def test_weekly_ramp_does_not_exceed_target():
     habit = engine.initialize_habit("Meditação", 2.1)
     
     # 2.0 * 1.15 = 2.3 (maior que o target de 2.1)
-    new_load = engine.calculate_next_week_load(habit, 0.90)
+    new_load, _ = engine.calculate_next_week_load(habit, 0.90)
     
     assert new_load == 2.1
