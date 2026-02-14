@@ -22,6 +22,26 @@ def test_focus_screen_mapping_morning():
     assert state.multiplier_active is True
     assert "CORTISOL" in state.multiplier_label
     assert state.automaticity_percent == pytest.approx(0.0)
+    assert state.theme_color == "#00FF41" # Maintain default
+    assert state.haptic_feedback == "heavy"
+
+def test_focus_screen_mapping_deload():
+    """
+    Verifica se o tema muda para Cyber-Orange durante um deload.
+    """
+    engine = HabitEngine()
+    presenter = UIPresenter(engine)
+    habit = engine.initialize_habit("Musculação", 60)
+    
+    # Força um deload
+    habit.weeks_completed = 4
+    engine.apply_next_week_load(habit, 0.9) # Próxima semana é a 5ª
+    
+    state = presenter.get_focus_state(habit, time(12, 0))
+    
+    assert state.change_type.name == "DELOAD"
+    assert state.theme_color == "#FF9100" # Cyber-Orange
+    assert state.haptic_feedback == "warning"
 
 def test_automaticity_progress():
     """
@@ -32,10 +52,8 @@ def test_automaticity_progress():
     habit = engine.initialize_habit("Meditação", 20)
     
     # Simula 33 dias (50% de 66)
-    # Como weeks_completed é o que temos, vamos assumir que cada week = 7 dias
-    habit.weeks_completed = 4 # ~28 dias
+    habit.days_completed = 33
     
     state = presenter.get_focus_state(habit, time(12, 0))
     
-    # (4 * 7) / 66 * 100 = 42.42
-    assert state.automaticity_percent == pytest.approx(42.42, abs=0.1)
+    assert state.automaticity_percent == pytest.approx(50.0)
