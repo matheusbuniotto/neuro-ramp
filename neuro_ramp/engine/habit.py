@@ -1,5 +1,11 @@
 # -*- coding: utf-8 -*-
 from dataclasses import dataclass, field
+from enum import Enum, auto
+
+class ChangeType(Enum):
+    RAMP = auto()
+    DELOAD = auto()
+    MAINTAIN = auto()
 
 @dataclass
 class Habit:
@@ -9,6 +15,8 @@ class Habit:
     current_load: float = field(init=False)
     # baseline_minutes é o valor inicial do hábito, garantindo <= 2 min
     baseline_minutes: float = field(init=False)
+    # Contador de semanas para lógica de ramp e deload
+    weeks_completed: int = 0
 
     def __post_init__(self):
         # Regra do baseline: Inicia com no máximo 2 minutos.
@@ -33,21 +41,37 @@ class HabitEngine:
         """
         return Habit(name=name, target_duration_minutes=target_duration_minutes)
 
-    def calculate_next_week_load(self, habit: Habit, adherence_rate: float) -> float:
+    def calculate_next_week_load(self, habit: Habit, adherence_rate: float) -> tuple[float, ChangeType]:
         """
-        Calcula o load para a próxima semana.
-        Se a aderência for > 80%, aumenta em 15%.
+        Calcula o load para a próxima semana e o tipo de mudança.
+        - A cada 5 semanas, ocorre um Auto-Deload (-20%).
+        - Caso contrário, se a aderência for > 80%, aumenta em 15% (Ramp).
         O valor nunca deve ultrapassar o target_duration_minutes.
         """
+        # Verificamos se a PRÓXIMA semana é a 5ª (múltiplo de 5)
+        next_week_number = habit.weeks_completed + 1
+        
+        if next_week_number % 5 == 0:
+            # Auto-Deload: Redução de 20%
+            new_load = habit.current_load * 0.80
+            final_load = round(max(habit.baseline_minutes, new_load), 2)
+            return final_load, ChangeType.DELOAD
+
         if adherence_rate > 0.8:
             new_load = habit.current_load * 1.15
             # Cap no target e arredonda para 2 casas decimais para clareza na UI
-            return round(min(new_load, habit.target_duration_minutes), 2)
+            final_load = round(min(new_load, habit.target_duration_minutes), 2)
+            
+            if final_load > habit.current_load:
+                return final_load, ChangeType.RAMP
         
-        return habit.current_load
+        return habit.current_load, ChangeType.MAINTAIN
 
     def apply_next_week_load(self, habit: Habit, adherence_rate: float) -> None:
         """
-        Calcula e aplica o novo load diretamente no objeto Habit.
+        Calcula e aplica o novo load diretamente no objeto Habit, 
+        e incrementa o contador de semanas.
         """
-        habit.current_load = self.calculate_next_week_load(habit, adherence_rate)
+        new_load, _ = self.calculate_next_week_load(habit, adherence_rate)
+        habit.current_load = new_load
+        habit.weeks_completed += 1

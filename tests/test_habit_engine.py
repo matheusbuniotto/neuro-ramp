@@ -25,3 +25,16 @@ def test_habit_with_very_small_target():
     
     assert habit.baseline_minutes <= 1
     assert habit.current_load == habit.baseline_minutes
+
+def test_apply_next_week_load_increments_counter():
+    """
+    Verifica se a aplicação do load incrementa o contador de semanas.
+    """
+    engine = HabitEngine()
+    habit = engine.initialize_habit("Coding", 60)
+    
+    assert habit.weeks_completed == 0
+    engine.apply_next_week_load(habit, 0.9)
+    assert habit.weeks_completed == 1
+    engine.apply_next_week_load(habit, 0.9)
+    assert habit.weeks_completed == 2
