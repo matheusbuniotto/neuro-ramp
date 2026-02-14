@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+.pytest_cache/
+
+# Docker
+.dockerignore
+
+# OS
+.DS_Store
+
+# Internal Neuro-Ramp Docs & Skills (As requested)
+*.skill
+habit-coach/
+AGENTS.md
+DESIGN_SPEC.md
+PRODUCT_BRIEF.md
+TASKS.md
+"Habit Formation_ Scientific Progressive Overload.md"
+
+# State tracking (AGENTS.md says this IS versioned)
+# state.json

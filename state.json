@@ -1,0 +1,14 @@
+{
+  "tasks_done": [
+    "NR-000: Initial project scaffolding"
+  ],
+  "prs": [],
+  "commits": [
+    "NR-000: Initial project scaffolding with uv, Docker, and pytest"
+  ],
+  "attention": [
+    "Project initialized with Python 3.12 and uv.",
+    "Docker environment ready via Dockerfile and docker-compose.yml.",
+    "Tests configured and passing."
+  ]
+}
