@@ -16,8 +16,11 @@ class Habit:
     current_load: float = field(init=False)
     # baseline_minutes é o valor inicial do hábito, garantindo <= 2 min
     baseline_minutes: float = field(init=False)
-    # Contador de semanas para lógica de ramp e deload
+    # Contador de semanas e dias para lógica de ramp, deload e automaticidade
     weeks_completed: int = 0
+    days_completed: int = 0
+    # Rastreia a última mudança para feedback na UI
+    last_change: ChangeType = ChangeType.MAINTAIN
 
     def __post_init__(self):
         # Regra do baseline: Inicia com no máximo 2 minutos.
@@ -73,9 +76,10 @@ class HabitEngine:
         Calcula e aplica o novo load diretamente no objeto Habit, 
         e incrementa o contador de semanas.
         """
-        new_load, _ = self.calculate_next_week_load(habit, adherence_rate)
+        new_load, change_type = self.calculate_next_week_load(habit, adherence_rate)
         habit.current_load = new_load
         habit.weeks_completed += 1
+        habit.last_change = change_type
 
     def get_completion_multiplier(self, completion_time: time) -> float:
         """

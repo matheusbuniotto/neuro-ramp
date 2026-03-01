@@ -2,29 +2,39 @@
   "tasks_done": [
     "NR-000: Initial project scaffolding",
     "NR-001: Implement habit baseline rule",
-    "NR-002: Create weekly ramp (+15%) calculation logic"
+    "NR-002: Create weekly ramp (+15%) calculation logic",
+    "NR-003: Implement 5th-week auto-deload logic",
+    "NR-004: Morning cortisol multiplier (2.3x) implementation"
   ],
   "prs": [
     {
-      "branch": "ft/NR-001-baseline-rule",
-      "commit_hash": "d7dc2b3",
-      "message": "ft: NR-001 implement habit baseline rule"
+      "id": 1,
+      "branch": "ft/NR-002-weekly-ramp",
+      "message": "ft: NR-002 implement weekly ramp calculation logic"
     },
     {
-      "branch": "ft/NR-002-weekly-ramp",
-      "url": "https://github.com/matheusbuniotto/neuro-ramp/pull/1",
-      "message": "ft: NR-002 implement weekly ramp calculation logic"
+      "id": 2,
+      "branch": "ft/NR-003-auto-deload",
+      "message": "ft: NR-003 implement 5th-week auto-deload logic"
+    },
+    {
+      "id": 3,
+      "branch": "ft/NR-004-morning-multiplier",
+      "url": "https://github.com/matheusbuniotto/neuro-ramp/pull/3",
+      "message": "ft: NR-004 implement morning cortisol multiplier (2.3x)"
     }
   ],
   "commits": [
     "NR-000: Initial project scaffolding with uv, Docker, and pytest",
     "NR-001: Implement habit baseline rule",
-    "NR-002: Implement weekly ramp (+15%) calculation logic"
+    "NR-002: Implement weekly ramp (+15%) calculation logic",
+    "NR-003: Implement 5th-week auto-deload logic with ChangeType metadata",
+    "NR-004: Implement morning cortisol multiplier (2.3x) and score calculation"
   ],
   "attention": [
-    "Weekly ramp logic (+15%) implemented and tested.",
-    "Added `apply_next_week_load` for better state management.",
-    "Fixed baseline edge cases for extremely small targets.",
-    "PR #1 created and reviewed by sub-agent."
+    "Morning multiplier (2.3x) active during 6:00 AM - 8:00 AM.",
+    "Added `calculate_completion_score` to provide value based on time of day.",
+    "Comprehensive tests for window boundaries and scoring logic.",
+    "PR #3 created and reviewed."
   ]
 }
